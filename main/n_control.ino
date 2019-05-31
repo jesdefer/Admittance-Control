@@ -29,15 +29,14 @@ int delay_sensor = 0.5;
 //Variable acceleration reference
 bool variable_damping_mode = false;
 float switching_damping = virtual_damping;
-float exchanged_energy = 0.0;
+float exchanged_energy_k = 0.0;
+float exchanged_energy_k_1 = 0.0;
+float delta_exchanged_energy_k = 0.0;
+float angular_position_k = 0.0;
+float angular_position_k_1 = 0.0;
+float torque_k_1 = 0.0;
 float virtual_storage_function = 0.0;
-float mean_exchanged = 0.0;
-float mean_storage = 0.0;
 float max_damping = 20;
-float min_damping = 5;
-float max_energy_error = 2.0;
-float min_energy_error = 0.02;
-float slope_damping = (max_damping-min_damping)/(max_energy_error-min_energy_error);
 
 void admittance_control(void){
   current_time = millis();
@@ -81,20 +80,22 @@ void desired_admittance_model(void){
   set_angle_to_motor(desired_position*180/PI);
   read_from_epos();
 
-  
-    exchanged_energy = torque*fromqc_todeg*(float)actualposition_data*(PI/180);
-    virtual_storage_function = 0.5*virtual_inertia*desired_velocity*desired_velocity + 0.5*virtual_stiffness*desired_position*desired_position;
-    if(variable_damping_mode){
-    mean_exchanged = mean_exchanged + 0.01*(abs(exchanged_energy)-mean_exchanged);
-    mean_storage = mean_storage + 0.01*(virtual_storage_function-mean_storage);
-    if (mean_exchanged < mean_storage) switching_damping  = max_damping;
+  angular_position_k = fromqc_todeg*(float)actualposition_data*(PI/180);
+  delta_exchanged_energy_k = torque_k_1*(angular_position_k - angular_position_k_1);
+  exchanged_energy_k = exchanged_energy_k_1 + delta_exchanged_energy_k;
+  exchanged_energy_k_1 = exchanged_energy_k;
+  angular_position_k_1 = angular_position_k;
+  torque_k_1 = torque;
+  virtual_storage_function = 0.5*virtual_inertia*desired_velocity*desired_velocity + 0.5*virtual_stiffness*desired_position*desired_position;
+  if(variable_damping_mode){
+    if (exchanged_energy_k < virtual_storage_function) switching_damping  = max_damping;
     else switching_damping  = virtual_damping;
-    }
-    /*
+  }
+    
     Serial.print(time_sim,5); Serial.print(", ");
-    Serial.print(exchanged_energy);Serial.print(", ");
+    Serial.print(exchanged_energy_k);Serial.print(", ");
     Serial.print(virtual_storage_function);Serial.print(", ");
-    Serial.println(switching_damping);*/
+    Serial.println(switching_damping);
  }
 
 
