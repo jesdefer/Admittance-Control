@@ -24,8 +24,8 @@ bool scattering_transformation = false;
 int b_factor = 1;
 float ul = 0.0; float vl = 0.0;
 float ur = 0.0; float vr = 0.0;
-int delay_driver = 0.5;
-int delay_sensor = 0.5;
+int delay_driver = 5;
+int delay_sensor = 5;
 //Variable acceleration reference
 bool variable_damping_mode = false;
 float switching_damping = virtual_damping;
