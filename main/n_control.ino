@@ -91,11 +91,6 @@ void desired_admittance_model(void){
     if (exchanged_energy_k < virtual_storage_function) switching_damping  = max_damping;
     else switching_damping  = virtual_damping;
   }
-    
-    Serial.print(time_sim,5); Serial.print(", ");
-    Serial.print(exchanged_energy_k);Serial.print(", ");
-    Serial.print(virtual_storage_function);Serial.print(", ");
-    Serial.println(switching_damping);
  }
 
 

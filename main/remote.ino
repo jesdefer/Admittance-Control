@@ -55,6 +55,16 @@ void check_keyboard(void){
     if (Serial.read() == 'Y') {
       add_delays= true;
       Serial.println("Selected: YES");
+      Serial.println("Set sensor extra delay! [ms]");
+      while (Serial.available() == 0);
+      delay_sensor = Serial.parseInt();
+      Serial.println("Sensor extra delay set to " + String(delay_sensor) + " [ms]");
+      Serial.println(" ");
+      Serial.println("Set actuator extra delay! [ms]");
+      while (Serial.available() == 0);
+      delay_driver = Serial.parseInt();
+      Serial.println("Actuator extra delay set to " + String(delay_driver) + " [ms]");
+      Serial.println(" ");
     }
     else {
       add_delays = false;
@@ -65,6 +75,12 @@ void check_keyboard(void){
     if (Serial.read() == 'Y') {
       scattering_transformation = true;
       Serial.println("Selected: YES");
+      Serial.println("Set Wave Admittance! [rad/Nms]");
+      while (Serial.available() == 0);
+      b_factor = Serial.parseFloat();
+      Serial.println("Wave Admittance set to" + String(max_damping) + " [rad/Nms]");
+      Serial.println(" ");
+       
     }
     else {
       scattering_transformation = false;
@@ -74,11 +90,13 @@ void check_keyboard(void){
     while (Serial.available() == 0);
     if (Serial.read() == 'Y') {
       variable_damping_mode  = true;
+      exchanged_energy_k = 0.0;
+      exchanged_energy_k_1 = 0.0;
       Serial.println("Selected: YES");
       Serial.println("Set safety damping! [Nms/rad]");
       while (Serial.available() == 0);
       max_damping = Serial.parseFloat();
-      Serial.println("Saferty damping set to " + String(max_damping) + " [Nms/rad]");
+      Serial.println("Safety damping set to " + String(max_damping) + " [Nms/rad]");
       Serial.println(" ");
     }
     else {
