@@ -78,7 +78,7 @@ void check_keyboard(void){
       Serial.println("Set Wave Admittance! [rad/Nms]");
       while (Serial.available() == 0);
       b_factor = Serial.parseFloat();
-      Serial.println("Wave Admittance set to" + String(max_damping) + " [rad/Nms]");
+      Serial.println("Wave Admittance set to " + String(b_factor) + " [rad/Nms]");
       Serial.println(" ");
        
     }

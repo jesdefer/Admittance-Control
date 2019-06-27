@@ -49,6 +49,11 @@ void desired_admittance_model(void){
   float time_sim = (millis()-t_ini)*0.001;
 
   torque = -(read_load_cell() - offset_load_cell)*0.000044421*Kg2N*N2Nm;
+  /*
+  Serial.print(time_sim,5); Serial.print(", ");
+  Serial.print(torque,5); Serial.print(", ");
+  Serial.print(desired_position); Serial.print(", ");
+  Serial.println(fromqc_todeg*(float)actualposition_data);*/
   
   if (scattering_transformation){
     vl = vr;
@@ -82,6 +87,7 @@ void desired_admittance_model(void){
 
   angular_position_k = fromqc_todeg*(float)actualposition_data*(PI/180);
   delta_exchanged_energy_k = torque_k_1*(angular_position_k - angular_position_k_1);
+  if (abs(delta_exchanged_energy_k)> 5) delta_exchanged_energy_k = 0;
   exchanged_energy_k = exchanged_energy_k_1 + delta_exchanged_energy_k;
   exchanged_energy_k_1 = exchanged_energy_k;
   angular_position_k_1 = angular_position_k;
